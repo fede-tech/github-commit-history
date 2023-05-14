@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import responseCommits from "./mocks/responseSuccess.json";
+
+const convertDate = (utcDate: string) => {
+  const date = new Date(utcDate).toString();
+  return date;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const commits = responseCommits.map((e) => e.commit);
+  const hasCommits = commits.length > 0;
+  console.log(commits);
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main>
+        {hasCommits ? (
+          <ul>
+            {commits.map((commit) => (
+              <li key={commit.tree.sha}>
+                <h3>{commit.message}</h3>
+                <p>by {commit.author.name}</p>
+                <p>on {convertDate(commit?.author?.date)}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No commits to show</p>
+        )}
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
